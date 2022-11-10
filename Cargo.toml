@@ -5,15 +5,23 @@ edition = "2021"
 
 # the profile used for `cargo build`
 [profile.dev]
-panic = "abort" # disable stack unwinding on panic
+#panic = "abort" # disable stack unwinding on panic
 
 # the profile used for `cargo build --release`
 [profile.release]
-panic = "abort" # disable stack unwinding on panic
+#panic = "abort" # disable stack unwinding on panic
 
 [dependencies]
 bootloader = "0.9.8"
 lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
 spin = "0.9.4"
 volatile = { version = "0.4.5", features = ["unstable"] }
+x86_64 = "0.14.2"
+uart_16550 = "0.2.0"
 
+[package.metadata.bootimage]
+test-args = [
+    "-device", "isa-debug-exit,iobase=0xf4,iosize=0x04", "-serial", "stdio",
+    "-display", "none"
+]
+test-success-exit-code = 33         # (0x10 << 1) | 1

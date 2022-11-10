@@ -8,3 +8,6 @@ build-std-features = ["compiler-builtins-mem"]
 # Run `rustup component add rust-src` to download the source code of the libs.
 build-std = ["core", "compiler_builtins"]
 
+
+[target.'cfg(target_os = "none")']
+runner = "bootimage runner"

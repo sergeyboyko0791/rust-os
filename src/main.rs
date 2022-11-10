@@ -1,11 +1,19 @@
 #![no_main]
 #![no_std]
+#![feature(custom_test_frameworks)]
+#![test_runner(rust_kernel::test_impl::test_runner)]
+#![reexport_test_harness_main = "test_main"]
 
-mod io;
-mod utils;
+rust_kernel::impl_test_runner!();
 
+#[cfg(not(test))]
 #[no_mangle]
-pub extern "C" fn _start() {
+pub extern "C" fn _start() { kernel_main(); }
+
+#[cfg(not(test))]
+fn kernel_main() -> ! {
+    use rust_kernel::io;
+
     let chars = [
         b'0', b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9', b' ',
     ];
@@ -27,7 +35,19 @@ pub extern "C" fn _start() {
             current += 1;
         }
     }
+
+    loop {}
 }
 
+#[cfg(not(test))]
 #[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! { loop {} }
+fn panic(_info: &core::panic::PanicInfo) -> ! {
+    use core::fmt::Write;
+    use rust_kernel::io;
+
+    io::print::VGA_OUTPUT
+        .lock()
+        .write_str("Panic acquired")
+        .ok();
+    loop {}
+}
