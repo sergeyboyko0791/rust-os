@@ -13,4 +13,4 @@ pub mod utils;
 impl_test_runner!();
 
 /// Initializes everything needed for proper kernel operation.
-pub fn init() { interrupts::init_idt(); }
+pub fn init() { interrupts::init(); }

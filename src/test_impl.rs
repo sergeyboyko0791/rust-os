@@ -1,4 +1,4 @@
-use crate::{serial_print, serial_println};
+use crate::serial_println;
 use core::panic::PanicInfo;
 
 /// Use this macro to implement a start point for the test binary.
@@ -67,7 +67,7 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
 
 pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("[failed]\n");
-    serial_println!("Error: {}\n", info);
+    serial_println!("Error: {info}\n");
     exit_qemu(QemuExitCode::Failed);
     loop {}
 }
