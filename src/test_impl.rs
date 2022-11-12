@@ -15,7 +15,10 @@ macro_rules! impl_test_runner {
     () => {
         #[cfg(test)]
         #[no_mangle]
-        pub extern "C" fn _start() { test_main(); }
+        pub extern "C" fn _start() {
+            $crate::init();
+            test_main();
+        }
 
         #[cfg(test)]
         #[panic_handler]
@@ -32,9 +35,9 @@ where
     T: Fn(),
 {
     fn run(&self) {
-        serial_print!("{} ... ", core::any::type_name::<T>());
+        serial_println!("{} ...", core::any::type_name::<T>());
         self();
-        serial_println!("[ok]");
+        serial_println!("\t[ok]");
     }
 }
 

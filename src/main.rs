@@ -14,6 +14,8 @@ pub extern "C" fn _start() { kernel_main(); }
 fn kernel_main() -> ! {
     use rust_kernel::io;
 
+    rust_kernel::init();
+
     let chars = [
         b'0', b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9', b' ',
     ];
