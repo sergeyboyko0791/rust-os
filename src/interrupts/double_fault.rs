@@ -1,5 +1,5 @@
-use crate::utils::PAGE_SIZE;
-use x86_64::structures::idt::InterruptStackFrame;
+use crate::utils::{halt_endless_loop, PAGE_SIZE};
+use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
 use x86_64::VirtAddr;
 
 /// The zero element within the [`TaskStateSegment::interrupt_stack_table`] list.
@@ -19,13 +19,21 @@ pub(crate) fn allocate_double_fault_stack() -> VirtAddr {
     stack_top
 }
 
+pub(super) fn set_handler(idt: &mut InterruptDescriptorTable) {
+    unsafe {
+        idt.double_fault
+            .set_handler_fn(double_fault_handler)
+            .set_stack_index(DOUBLE_FAULT_IST_INDEX);
+    }
+}
+
 // TODO https://i.stack.imgur.com/dvK8G.png
-pub(super) extern "x86-interrupt" fn double_fault_handler(
+extern "x86-interrupt" fn double_fault_handler(
     stack_frame: InterruptStackFrame,
     error_code: u64,
 ) -> ! {
     crate::println!("EXCEPTION: DOUBLE_FAULT error_code={error_code}");
     crate::println!("{stack_frame:?}");
 
-    loop {}
+    halt_endless_loop()
 }

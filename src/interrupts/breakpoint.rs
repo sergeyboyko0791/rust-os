@@ -1,9 +1,13 @@
 #[cfg(test)]
 use core::sync::atomic::{AtomicBool, Ordering};
-use x86_64::structures::idt::InterruptStackFrame;
+use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
+
+pub(super) fn set_handler(idt: &mut InterruptDescriptorTable) {
+    idt.breakpoint.set_handler_fn(breakpoint_handler);
+}
 
 #[cfg(not(test))]
-pub(super) extern "x86-interrupt" fn breakpoint_handler(stack_frame: InterruptStackFrame) {
+extern "x86-interrupt" fn breakpoint_handler(stack_frame: InterruptStackFrame) {
     crate::println!("EXCEPTION: BREAKPOINT");
     crate::println!("{stack_frame:?}");
 }
@@ -12,7 +16,7 @@ pub(super) extern "x86-interrupt" fn breakpoint_handler(stack_frame: InterruptSt
 static BREAK_POINT_INVOKED: AtomicBool = AtomicBool::new(false);
 
 #[cfg(test)]
-pub(super) extern "x86-interrupt" fn breakpoint_handler(stack_frame: InterruptStackFrame) {
+extern "x86-interrupt" fn breakpoint_handler(stack_frame: InterruptStackFrame) {
     crate::serial_println!("EXCEPTION: BREAKPOINT");
     crate::serial_println!("{stack_frame:?}");
     BREAK_POINT_INVOKED.store(true, Ordering::Relaxed);

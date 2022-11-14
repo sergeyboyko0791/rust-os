@@ -35,6 +35,7 @@ where
     T: Fn(),
 {
     fn run(&self) {
+        serial_println!();
         serial_println!("{} ...", core::any::type_name::<T>());
         self();
         serial_println!("\t[ok]");

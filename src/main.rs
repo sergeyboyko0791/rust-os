@@ -38,18 +38,14 @@ fn kernel_main() -> ! {
         }
     }
 
-    loop {}
+    rust_kernel::utils::halt_endless_loop()
 }
 
 #[cfg(not(test))]
 #[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
-    use core::fmt::Write;
-    use rust_kernel::io;
+fn panic(info: &core::panic::PanicInfo) -> ! {
+    rust_kernel::println!("PANIC:");
+    rust_kernel::println!("{info}");
 
-    io::print::VGA_OUTPUT
-        .lock()
-        .write_str("Panic acquired")
-        .ok();
-    loop {}
+    rust_kernel::utils::halt_endless_loop()
 }

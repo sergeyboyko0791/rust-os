@@ -1,10 +1,11 @@
 use crate::io::vga_writer::VgaWriter;
-use crate::utils::sync::SpinLock;
+use crate::utils::sync::SpinLockWithoutInterrupts;
 use core::fmt::{self, Write};
 use lazy_static::lazy_static;
 
 lazy_static! {
-    pub static ref VGA_OUTPUT: SpinLock<VgaWriter> = SpinLock::new(VgaWriter::new());
+    pub static ref VGA_OUTPUT: SpinLockWithoutInterrupts<VgaWriter> =
+        SpinLockWithoutInterrupts::new(VgaWriter::new());
 }
 
 /// Later consider using `alloc::print` instead.
