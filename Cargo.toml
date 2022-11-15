@@ -15,6 +15,7 @@ edition = "2021"
 bootloader = "0.9.8"
 lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
 pic8259 = "0.10.2"
+pc-keyboard = "0.6.1"
 spin = "0.9.4"
 volatile = { version = "0.4.5", features = ["unstable"] }
 x86_64 = "0.14.2"

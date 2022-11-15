@@ -6,6 +6,7 @@ use lazy_static::lazy_static;
 use pic8259::ChainedPics;
 use x86_64::structures::idt::InterruptDescriptorTable;
 
+mod keyboard;
 mod timer;
 
 const PRIMARY_PIC_OFFSET: u8 = 32;
@@ -19,6 +20,7 @@ lazy_static! {
 #[repr(u8)]
 pub(crate) enum HwInterruptIndex {
     Timer = PRIMARY_PIC_OFFSET,
+    Keyboard,
 }
 
 impl HwInterruptIndex {
@@ -33,7 +35,10 @@ pub fn init() {
     x86_64::instructions::interrupts::enable();
 }
 
-pub fn set_handlers(idt: &mut InterruptDescriptorTable) { timer::set_handler(idt); }
+pub fn set_handlers(idt: &mut InterruptDescriptorTable) {
+    keyboard::set_handler(idt);
+    timer::set_handler(idt);
+}
 
 const fn new_pics() -> ChainedPics {
     unsafe { ChainedPics::new(PRIMARY_PIC_OFFSET, SECONDARY_PIC_OFFSET) }
