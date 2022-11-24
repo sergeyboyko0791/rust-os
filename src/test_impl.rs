@@ -14,10 +14,14 @@ use core::panic::PanicInfo;
 macro_rules! impl_test_runner {
     () => {
         #[cfg(test)]
-        #[no_mangle]
-        pub extern "C" fn _start() {
+        bootloader::entry_point!(test_kernel_main);
+
+        #[cfg(test)]
+        fn test_kernel_main(_boot_info: &'static bootloader::BootInfo) -> ! {
             $crate::init();
             test_main();
+
+            $crate::utils::halt_endless_loop()
         }
 
         #[cfg(test)]

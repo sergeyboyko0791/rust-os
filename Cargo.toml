@@ -12,7 +12,7 @@ edition = "2021"
 #panic = "abort" # disable stack unwinding on panic
 
 [dependencies]
-bootloader = "0.9.8"
+bootloader = { version = "0.9.8", features = ["map_physical_memory"] }
 lazy_static = { version = "1.4.0", features = ["spin_no_std"] }
 pic8259 = "0.10.2"
 pc-keyboard = "0.6.1"

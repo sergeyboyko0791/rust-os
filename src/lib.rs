@@ -7,6 +7,7 @@
 
 pub mod interrupts;
 pub mod io;
+pub mod memory;
 pub mod test_impl;
 pub mod utils;
 
